@@ -20,22 +20,69 @@ class Mesh:
         self.rot = glm.vec3()
         self.scale = glm.vec3(1)
         self.vertices = []
+        self.faces = []
 
 
 class Cube(Mesh):
     def __init__(self) -> None:
         super().__init__()
-        self.vertices = [
-            glm.vec3(-1.0, -1.0, 1.0),
-            glm.vec3(1.0, -1.0, 1.0),
-            glm.vec3(1.0, 1.0, 1.0),
-            glm.vec3(-1.0, 1.0, 1.0),
-            glm.vec3(-1.0, -1.0, -1.0),
-            glm.vec3(1.0, -1.0, -1.0),
-            glm.vec3(1.0, 1.0, -1.0),
-            glm.vec3(-1.0, 1.0, -1.0),
+        self.vertices = [glm.vec3(*v) for v in [
+            (-1, 1, 1),
+            (1, 1, 1),
+            (-1, -1, 1),
+            (1, -1, 1),
+            (-1, 1, -1),
+            (1, 1, -1),
+            (1, -1, -1),
+            (-1, -1, -1),
+        ]]
+
+        self.faces = [
+            (0,1,2),
+            (1,2,3),
+            (1,3,6),
+            (1,5,6),
+            (0,1,4),
+            (1,4,5),
+            (2,3,7),
+            (3,6,7),
+            (0,2,7),
+            (0,4,7),
+            (4,5,6),
+            (4,6,7)
         ]
 
+
+def draw_mesh_points(surface, mesh, vp_matrix):
+    width, height = surface.get_size()
+
+    world_matrix = glm.mat4(1)
+    world_matrix = glm.translate(world_matrix, mesh.pos)
+    world_matrix = glm.rotate(world_matrix, mesh.rot.x, glm.vec3(1, 0, 0))
+    world_matrix = glm.rotate(world_matrix, mesh.rot.y, glm.vec3(0, 1, 0))
+    world_matrix = glm.rotate(world_matrix, mesh.rot.z, glm.vec3(0, 0, 1))
+    world_matrix = glm.scale(world_matrix, mesh.scale)
+
+    for v in mesh.vertices:
+        point = glm.project(v, world_matrix, vp_matrix, glm.vec4(0, 0, width, height))
+        if 0 < point.x < width and 0 < point.y < height:
+            pygame.gfxdraw.pixel(surface, int(point.x), int(point.y), (255, 255, 255))
+
+def draw_mesh_lines(surface, mesh, vp_matrix):
+    width, height = surface.get_size()
+
+    world_matrix = glm.mat4(1)
+    world_matrix = glm.translate(world_matrix, mesh.pos)
+    world_matrix = glm.rotate(world_matrix, mesh.rot.x, glm.vec3(1, 0, 0))
+    world_matrix = glm.rotate(world_matrix, mesh.rot.y, glm.vec3(0, 1, 0))
+    world_matrix = glm.rotate(world_matrix, mesh.rot.z, glm.vec3(0, 0, 1))
+    world_matrix = glm.scale(world_matrix, mesh.scale)
+
+    for face in mesh.faces:
+        a,b,c = (glm.project(mesh.vertices[i], world_matrix, vp_matrix, glm.vec4(0, 0, width, height)) for i in face)
+        pygame.gfxdraw.line(surface, int(a.x), int(a.y), int(b.x), int(b.y), (255, 255, 255))
+        pygame.gfxdraw.line(surface, int(c.x), int(c.y), int(b.x), int(b.y), (255, 255, 255))
+        pygame.gfxdraw.line(surface, int(a.x), int(a.y), int(c.x), int(c.y), (255, 255, 255))
 
 def main():
     pygame.init()
@@ -87,17 +134,7 @@ def main():
         vp_matrix = vp_matrix * glm.lookAt(camera.pos, camera.target, camera.up)
 
         for m in mesh, mesh2:
-            world_matrix = glm.mat4(1)
-            world_matrix = glm.translate(world_matrix, m.pos)
-            world_matrix = glm.rotate(world_matrix, m.rot.x, glm.vec3(1, 0, 0))
-            world_matrix = glm.rotate(world_matrix, m.rot.y, glm.vec3(0, 1, 0))
-            world_matrix = glm.rotate(world_matrix, m.rot.z, glm.vec3(0, 0, 1))
-            world_matrix = glm.scale(world_matrix, m.scale)
-
-            for v in m.vertices:
-                point = glm.project(v, world_matrix, vp_matrix, glm.vec4(0, 0, width, height))
-                if 0 < point.x < width and 0 < point.y < height:
-                    pygame.gfxdraw.pixel(screen, int(point.x), int(point.y), (255, 255, 255))
+            draw_mesh_lines(screen, m, vp_matrix)
 
         origin = glm.project(glm.vec3(0, 0, 0), glm.mat4(1), vp_matrix, glm.vec4(0, 0, width, height))
         for v in glm.vec3(1, 0, 0), glm.vec3(0, 1, 0), glm.vec3(0, 0, 1):
