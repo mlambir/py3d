@@ -147,6 +147,17 @@ checkqa-mypy = ["mypy (==v0.761)"]
 testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "requests", "xmlschema"]
 
 [[package]]
+name = "pywavefront"
+version = "1.3.3"
+description = "Python library for importing Wavefront .obj files"
+category = "main"
+optional = false
+python-versions = ">=3.4"
+
+[package.extras]
+visualization = ["pyglet"]
+
+[[package]]
 name = "six"
 version = "1.16.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -165,7 +176,7 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "73d94ca19344863eaddb3e6d7fe475fdc16046b110f07169d924933f77173d71"
+content-hash = "8338e6ab3cc661e7024fad9e0a1b48d791e3ff106437d16f9ec26c3d5b9662d6"
 
 [metadata.files]
 atomicwrites = [
@@ -367,6 +378,9 @@ pyrr = [
 pytest = [
     {file = "pytest-5.4.3-py3-none-any.whl", hash = "sha256:5c0db86b698e8f170ba4582a492248919255fcd4c79b1ee64ace34301fb589a1"},
     {file = "pytest-5.4.3.tar.gz", hash = "sha256:7979331bfcba207414f5e1263b5a0f8f521d0f457318836a7355531ed1a4c7d8"},
+]
+pywavefront = [
+    {file = "PyWavefront-1.3.3-py3-none-any.whl", hash = "sha256:ec79cadd046b168434b01031e574f4105f821d06cb8cf754801e4dc18076bbeb"},
 ]
 six = [
     {file = "six-1.16.0-py2.py3-none-any.whl", hash = "sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254"},

@@ -10,6 +10,7 @@ pygame = "^2.1.2"
 numpy = "^1.23.0"
 pyrr = "^0.10.3"
 PyGLM = "^2.5.7"
+PyWavefront = "^1.3.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
