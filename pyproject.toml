@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "py3d"
+version = "0.1.0"
+description = ""
+authors = ["Mariano Lambir <mlambir@gmail.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pygame = "^2.1.2"
+numpy = "^1.23.0"
+pyrr = "^0.10.3"
+PyGLM = "^2.5.7"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pyright] 
+venvPath="/home/mlambir/.cache/pypoetry/virtualenvs" 
+venv="py3d-pzUNBTHX-py3.10"
