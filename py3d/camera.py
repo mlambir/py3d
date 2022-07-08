@@ -14,5 +14,6 @@ class Camera:
 
     def vp_matrix(self):
         m = glm.mat4(1)
-        m = m * glm.perspectiveFovLH(glm.radians(60), self.size[0], self.size[1], .1, 100)
+        m = m * glm.perspectiveFov(glm.radians(60), self.size[0], self.size[1], .1, 100)
+        m = m * glm.scale(glm.vec3(1, -1, 1))
         return m * glm.lookAtRH(self.pos, self.target, self.up)

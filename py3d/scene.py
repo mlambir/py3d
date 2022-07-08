@@ -21,10 +21,16 @@ class Scene:
         self.zbuf = np.full(self.size, 2.)
 
     def project(self, v):
-        v = glm.vec3(v.x, v.y, v.z)
-        point = glm.project(v, glm.mat4(1), self.camera.vp_matrix(), glm.vec4(0, 0, self.size[0], self.size[1]))
-        point.z = glm.length(v - self.camera.pos)
-        return point
+        v = glm.vec4(v.x, v.y, v.z, 1)
+
+        tmp = self.camera.vp_matrix() * v
+        tmp /= tmp.w
+        tmp = tmp * 0.5 + 0.5
+        tmp.x *= self.size[0]
+        tmp.y *= self.size[1]
+
+        tmp.z = glm.length(v.xyz - self.camera.pos)
+        return tmp
 
     def draw_mesh_points(self, mesh):
         width, height = self.size
@@ -97,7 +103,7 @@ class Scene:
                     self.process_scanline(y, p2, p3, p1, p3, color)
 
     def draw_mesh_triangles_scan(self, mesh):
-        light_position = glm.vec3(0, -10, 0)
+        light_position = glm.vec3(0, 10, 10)
 
         world_normals = mesh.world_normals()
         world_vertices = mesh.world_vertices()
@@ -111,7 +117,7 @@ class Scene:
                 continue
 
             light_direction = glm.normalize(light_position - center_point)
-            light_intensity = int(max(0, glm.dot(normal, light_direction)) * 255)
+            light_intensity = int(max(0, - glm.dot(normal, light_direction)) * 255)
 
             try:
                 #color = (abs(int(normal.x * 255)), abs(int(normal.y * 255)), abs(int(normal.z * 255)))
