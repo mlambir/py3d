@@ -1,5 +1,3 @@
-from dataclasses import dataclass
-
 import glm
 import pywavefront
 
@@ -39,4 +37,4 @@ class Mesh:
     def world_faces(self):
         world_matrix = self.world_matrix()
         for f in self.faces:
-            yield [(world_matrix * v, glm.normalize((world_matrix * n)).xyz, u) for v, n, u in f]
+            yield [(world_matrix * v, glm.normalize((world_matrix * n).xyz), u) for v, n, u in f]

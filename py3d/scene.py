@@ -29,7 +29,7 @@ class Scene:
         tmp.x *= self.size[0]
         tmp.y *= self.size[1]
 
-        tmp.z = glm.length(v.xyz - self.camera.pos)
+        # tmp.z = glm.length(v.xyz - self.camera.pos)
         return tmp
 
     def draw_mesh_points(self, mesh):
@@ -104,13 +104,14 @@ class Scene:
                     self.process_scanline(y, p2, p3, p1, p3, color)
 
     def draw_mesh_triangles_scan(self, mesh):
-        light_position = glm.vec3(0, 10, 10)
+        light_position = glm.vec3(10, 10, 10)
+        light_position = light_position * glm.vec3(-1, -1, 1)
 
         for i, face in enumerate(mesh.world_faces()):
 
             a, b, c = (self.project(v) for v, _, _ in face)
 
-            normal = glm.normalize(face[0][1] + face[1][1] * face[2][1]) / 3
+            normal = glm.normalize((face[0][1] + face[1][1] + face[2][1]) / 3)
 
             center_point = (face[0][0] + face[1][0] + face[2][0]) / 3
 
@@ -118,7 +119,7 @@ class Scene:
                 continue
 
             light_direction = glm.normalize(center_point - light_position)
-            light_intensity = int(max(0, glm.dot(normal, light_direction)) * 255)
+            light_intensity = int(max(0, glm.dot(normal, light_direction) * .9 + .1) * 255)
 
             try:
                 # color = (abs(int(normal.x * 255)), abs(int(normal.y * 255)), abs(int(normal.z * 255)))
@@ -138,7 +139,6 @@ class Scene:
             if 0 < point.x < width and 0 < point.y < height:
                 pygame.gfxdraw.pixel(self.surface, int(point.x), int(point.y), (0, 255, 255))
                 self.surface.blit(font.render(str(i), True, (255, 0, 255)), (int(point.x), int(point.y)))
-
 
     def draw_origin(self):
         origin = self.project(glm.vec3(0, 0, 0))
