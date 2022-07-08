@@ -14,9 +14,7 @@ def main():
     screen = pygame.display.set_mode((width * 4, height * 4))
     mesh = Mesh()
     mesh.load_obj("data/LowPolySphere.obj")
-    #mesh.scale = glm.vec3(.02, .02, .02)
-    # mesh = Cube()
-    # mesh.pos = glm.vec3(1, 1, 1)
+    # mesh.scale = glm.vec3(.02, .02, .02)
     running = True
 
     scene = Scene(size)

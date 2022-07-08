@@ -5,8 +5,15 @@ import pywavefront
 def iterate_vertices_t2f_n3f_v3f(vertices):
     for i in range(0, len(vertices), 8):
         yield (glm.vec3(vertices[i + 5], vertices[i + 6], vertices[i + 7]),
-               glm.vec3(vertices[i + 2], vertices[i + 3], vertices[i + 4]),
+               glm.vec3(-vertices[i + 2], -vertices[i + 3], -vertices[i + 4]),
                glm.vec2(vertices[i + 0], vertices[i + 1]))
+
+
+def iterate_vertices_v3f(vertices):
+    for i in range(0, len(vertices), 3):
+        yield (glm.vec3(vertices[i + 0], vertices[i + 1], vertices[i + 2]),
+               None,
+               None)
 
 
 class Mesh:
@@ -19,12 +26,28 @@ class Mesh:
     def load_obj(self, path):
         o = pywavefront.Wavefront(path, create_materials=True, collect_faces=True)
         for mat_name, mat in o.materials.items():
-            verts = iterate_vertices_t2f_n3f_v3f(mat.vertices)
+            if mat.vertex_format == 'V3F':
+                verts = iterate_vertices_v3f(mat.vertices)
+            elif mat.vertex_format == 'T2F_N3F_V3F':
+                verts = iterate_vertices_t2f_n3f_v3f(mat.vertices)
+            else:
+                return
+
             while True:
                 try:
-                    self.faces.append((next(verts), next(verts), next(verts)))
+                    self.faces.append([next(verts), next(verts), next(verts)])
                 except StopIteration:
                     break
+
+            if not mat.has_normals:
+                self.generate_normals()
+
+    def generate_normals(self):
+        for face in self.faces:
+            v0, v1, v2 = [v for v,n,u in face]
+            normal = glm.normalize(glm.cross(v1 - v0, v2 - v0))
+            for i, (v, n, u) in enumerate(face):
+                face[i] = (v, normal, u)
 
     def world_matrix(self):
         world_matrix = glm.mat4(1)

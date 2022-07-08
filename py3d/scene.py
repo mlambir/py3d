@@ -5,10 +5,6 @@ import numpy as np
 from camera import Camera
 
 
-def interpolate(min_, max_, gradient):
-    return min_ + (max_ - min_) * glm.clamp(gradient, 0, 1)
-
-
 class Scene:
     def __init__(self, size, camera=None):
         self.camera = camera if camera else Camera(size)
@@ -59,15 +55,15 @@ class Scene:
         gradient1 = (y - pa.y) / (pb.y - pa.y) if pa.y != pb.y else 1.
         gradient2 = (y - pc.y) / (pd.y - pc.y) if pc.y != pd.y else 1.
 
-        sx = int(interpolate(pa.x, pb.x, gradient1))
-        ex = int(interpolate(pc.x, pd.x, gradient2))
-        z1 = interpolate(pa.z, pb.z, gradient1)
-        z2 = interpolate(pc.z, pd.z, gradient2)
+        sx = int(glm.lerp(pa.x, pb.x, gradient1))
+        ex = int(glm.lerp(pc.x, pd.x, gradient2))
+        z1 = glm.lerp(pa.z, pb.z, gradient1)
+        z2 = glm.lerp(pc.z, pd.z, gradient2)
 
         width, height = self.size
         for x in range(sx, ex):
             gradient = (x - sx) / (ex - sx)
-            z = interpolate(z1, z2, gradient)
+            z = glm.lerp(z1, z2, gradient)
             if 0 < x < width and 0 < y < height and self.zbuf[x, y] > z / 100:
                 self.zbuf[x, y] = z / 100
                 self.surface.set_at((x, y), color)
@@ -105,7 +101,7 @@ class Scene:
 
     def draw_mesh_triangles_scan(self, mesh):
         light_position = glm.vec3(10, 10, 10)
-        light_position = light_position * glm.vec3(-1, -1, 1)
+        #light_position = light_position * glm.vec3(-1, -1, 1)
 
         for i, face in enumerate(mesh.world_faces()):
 
