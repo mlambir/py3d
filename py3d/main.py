@@ -2,7 +2,7 @@ import pygame
 import pygame.gfxdraw
 import glm
 
-from mesh import Mesh, Cube
+from mesh import Mesh
 from scene import Scene
 
 
@@ -13,8 +13,8 @@ def main():
     size = width, height = (320, 240)
     screen = pygame.display.set_mode((width * 4, height * 4))
     mesh = Mesh()
-    mesh.load_obj("data/teapot.obj")
-    mesh.scale = glm.vec3(.02, .02, .02)
+    mesh.load_obj("data/LowPolySphere.obj")
+    #mesh.scale = glm.vec3(.02, .02, .02)
     # mesh = Cube()
     # mesh.pos = glm.vec3(1, 1, 1)
     running = True
@@ -55,6 +55,7 @@ def main():
         scene.clear()
         for m in mesh,:
             scene.draw_mesh_triangles_scan(m)
+            #scene.draw_mesh_points(m)
 
         scene.draw_origin()
 

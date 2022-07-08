@@ -34,10 +34,11 @@ class Scene:
 
     def draw_mesh_points(self, mesh):
         width, height = self.size
-        for v in mesh.world_vertices():
-            point = self.project(v)
-            if 0 < point.x < width and 0 < point.y < height:
-                pygame.gfxdraw.pixel(self.surface, int(point.x), int(point.y), (255, 255, 255))
+        for f in mesh.world_faces():
+            for v, _, _ in f:
+                point = self.project(v)
+                if 0 < point.x < width and 0 < point.y < height:
+                    pygame.gfxdraw.pixel(self.surface, int(point.x), int(point.y), (255, 255, 255))
 
     def draw_mesh_lines(self, mesh):
         world_vertices = mesh.world_vertices()
@@ -105,22 +106,22 @@ class Scene:
     def draw_mesh_triangles_scan(self, mesh):
         light_position = glm.vec3(0, 10, 10)
 
-        world_normals = mesh.world_normals()
-        world_vertices = mesh.world_vertices()
-        for i, face in enumerate(mesh.faces):
-            a, b, c = (self.project(world_vertices[i]) for i in face)
-            normal = world_normals[i].xyz
+        for i, face in enumerate(mesh.world_faces()):
 
-            center_point = (world_vertices[face[0]] + world_vertices[face[1]] + world_vertices[face[2]]) / 3
+            a, b, c = (self.project(v) for v, _, _ in face)
+
+            normal = glm.normalize(face[0][1] + face[1][1] * face[2][1]) / 3
+
+            center_point = (face[0][0] + face[1][0] + face[2][0]) / 3
 
             if glm.dot(normal, center_point - self.camera.pos) < 0:
                 continue
 
-            light_direction = glm.normalize(light_position - center_point)
-            light_intensity = int(max(0, - glm.dot(normal, light_direction)) * 255)
+            light_direction = glm.normalize(center_point - light_position)
+            light_intensity = int(max(0, glm.dot(normal, light_direction)) * 255)
 
             try:
-                #color = (abs(int(normal.x * 255)), abs(int(normal.y * 255)), abs(int(normal.z * 255)))
+                # color = (abs(int(normal.x * 255)), abs(int(normal.y * 255)), abs(int(normal.z * 255)))
                 color = [light_intensity] * 3
             except:
                 color = (255, 255, 255)
