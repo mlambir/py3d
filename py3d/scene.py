@@ -6,6 +6,7 @@ import numpy as np
 
 from camera import Camera
 
+
 @dataclasses.dataclass
 class ScanlineData:
     y = None
@@ -13,10 +14,11 @@ class ScanlineData:
     ua = ub = uc = ud = None
     va = vb = vc = vd = None
 
+
 def calc_n_dot_l(vertex, normal, light_pos):
     light_direction = vertex - light_pos
     normal = glm.normalize(normal)
-    light_direction = glm.normalize(light_direction)
+    light_direction = -glm.normalize(light_direction)
     return max(0, (glm.dot(normal, light_direction) * .8 + .2))
 
 
@@ -93,7 +95,7 @@ class Scene:
             if texture:
                 texture_color = texture.map(u, v)
             else:
-                texture_color = glm.vec3(1,1,1)
+                texture_color = glm.vec3(1, 1, 1)
 
             if 0 < x < width and 0 < data.y < height and self.zbuf[x, data.y] > z / 100:
                 self.zbuf[x, data.y] = z / 100
@@ -111,7 +113,7 @@ class Scene:
             v1, v2 = v2, v1
             p1, p2 = p2, p1
 
-        nl1, nl2, nl3 = [calc_n_dot_l(v, n, light_pos) for v,n,_ in (v1, v2, v3)]
+        nl1, nl2, nl3 = [calc_n_dot_l(v, n, light_pos) for v, n, _ in (v1, v2, v3)]
 
         if p2.y - p1.y > 0:
             d_p1_p2 = (p2.x - p1.x) / (p2.y - p1.y)
@@ -206,8 +208,9 @@ class Scene:
         for i, face in enumerate(mesh.world_faces()):
             normal = glm.normalize((face[0][1] + face[1][1] + face[2][1]) / 3)
             center_point = (face[0][0] + face[1][0] + face[2][0]) / 3
-            if glm.dot(normal, center_point - self.camera.pos) < 0:
-                continue
+            if glm.dot(normal, self.camera.pos - center_point) < 0:
+                pass
+                # continue
             self.draw_triangle(*face, light_position, glm.vec3(1, 1, 1), mesh.texture)
 
     def draw_vertex_index(self, mesh):

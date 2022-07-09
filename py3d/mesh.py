@@ -14,7 +14,7 @@ def iterate_vertices_v3f(vertices):
     for i in range(0, len(vertices), 3):
         yield (glm.vec3(vertices[i + 0], vertices[i + 1], vertices[i + 2]),
                None,
-               None)
+               glm.vec2())
 
 
 class Texture:
@@ -24,7 +24,7 @@ class Texture:
 
     def map(self, tu, tv):
         u = abs(int(tu * self.width) % self.width)
-        v = abs(int(tv * self.height) % self.height)
+        v = abs((self.height - int(tv * self.height)) % self.height)
 
         color = self.surface.get_at([u, v])
         return glm.vec4(*color).xyz/255
@@ -63,7 +63,7 @@ class Mesh:
     def generate_normals(self):
         for face in self.faces:
             v0, v1, v2 = [v for v, n, u in face]
-            normal = glm.normalize(glm.cross(v1 - v0, v2 - v0))
+            normal = glm.normalize(glm.cross(v1 - v0, v0 - v2))
             for i, (v, n, u) in enumerate(face):
                 face[i] = (v, normal, u)
 
