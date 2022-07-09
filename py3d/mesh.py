@@ -27,7 +27,7 @@ class Texture:
         v = abs((self.height - int(tv * self.height)) % self.height)
 
         color = self.surface.get_at([u, v])
-        return glm.vec4(*color).xyz/255
+        return glm.vec4(*color).xyz / 255
 
 
 class Mesh:

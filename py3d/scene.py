@@ -1,8 +1,8 @@
 import dataclasses
 
 import glm
-import pygame
 import numpy as np
+import pygame
 
 from camera import Camera
 
@@ -118,7 +118,7 @@ class Scene:
         if p2.y - p1.y > 0:
             d_p1_p2 = (p2.x - p1.x) / (p2.y - p1.y)
         else:
-            d_p1_p2 = -10000 # hacky
+            d_p1_p2 = -10000  # hacky
 
         if p3.y - p1.y > 0:
             d_p1_p3 = (p3.x - p1.x) / (p3.y - p1.y)

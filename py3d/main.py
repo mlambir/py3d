@@ -1,6 +1,6 @@
+import glm
 import pygame
 import pygame.gfxdraw
-import glm
 
 from mesh import Mesh
 from scene import Scene
@@ -14,8 +14,8 @@ def main():
     screen = pygame.display.set_mode((width * 4, height * 4))
     mesh = Mesh()
     mesh.load_obj("data/LowPolySphere.obj", texture="data/Earth.jpg")
-    #mesh.load_obj("data/teapot.obj")
-    #mesh.scale = glm.vec3(.02, .02, .02)
+    # mesh.load_obj("data/teapot.obj")
+    # mesh.scale = glm.vec3(.02, .02, .02)
     running = True
 
     scene = Scene(size)
@@ -47,14 +47,14 @@ def main():
 
         scene.camera.pos += movement
 
-        #mesh.rot.x += 0.01
+        # mesh.rot.x += 0.01
         mesh.rot.y += 0.02
-        #mesh.rot.z += 0.03
+        # mesh.rot.z += 0.03
 
         scene.clear()
         for m in mesh,:
             scene.draw_mesh_triangles_scan(m)
-            #scene.draw_mesh_points(m)
+            # scene.draw_mesh_points(m)
 
         scene.draw_origin()
 

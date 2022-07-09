@@ -4,7 +4,7 @@ import glm
 class Camera:
     def __init__(self, size) -> None:
         self.size = size
-        self.pos = glm.vec3(0, 0, 10)
+        self.pos = glm.vec3(0, 0, 3)
         self.dir = glm.vec3(0, 0, -1)
         self.up = glm.vec3(0, 1, 0)
 
