@@ -48,7 +48,7 @@ def main():
         scene.camera.pos += movement
 
         #mesh.rot.x += 0.01
-        #mesh.rot.y += 0.02
+        mesh.rot.y += 0.02
         #mesh.rot.z += 0.03
 
         scene.clear()

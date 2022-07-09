@@ -118,7 +118,7 @@ class Scene:
         if p2.y - p1.y > 0:
             d_p1_p2 = (p2.x - p1.x) / (p2.y - p1.y)
         else:
-            d_p1_p2 = 0
+            d_p1_p2 = -10000 # hacky
 
         if p3.y - p1.y > 0:
             d_p1_p3 = (p3.x - p1.x) / (p3.y - p1.y)
@@ -209,8 +209,7 @@ class Scene:
             normal = glm.normalize((face[0][1] + face[1][1] + face[2][1]) / 3)
             center_point = (face[0][0] + face[1][0] + face[2][0]) / 3
             if glm.dot(normal, self.camera.pos - center_point) < 0:
-                pass
-                # continue
+                continue
             self.draw_triangle(*face, light_position, glm.vec3(1, 1, 1), mesh.texture)
 
     def draw_vertex_index(self, mesh):
