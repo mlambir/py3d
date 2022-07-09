@@ -13,7 +13,7 @@ def main():
     size = width, height = (320, 240)
     screen = pygame.display.set_mode((width * 4, height * 4))
     mesh = Mesh()
-    mesh.load_obj("data/LowPolySphere.obj")
+    mesh.load_obj("data/LowPolySphere.obj", texture="data/Earth.jpg")
     # mesh.scale = glm.vec3(.02, .02, .02)
     running = True
 
@@ -46,9 +46,9 @@ def main():
 
         scene.camera.pos += movement
 
-        mesh.rot.x += 0.01
-        mesh.rot.y += 0.02
-        mesh.rot.z += 0.03
+        #mesh.rot.x += 0.01
+        #mesh.rot.y += 0.02
+        #mesh.rot.z += 0.03
 
         scene.clear()
         for m in mesh,:

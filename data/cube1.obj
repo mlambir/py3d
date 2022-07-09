@@ -1,6 +1,6 @@
 # Blender 3.2.0
 # www.blender.org
-mtllib cube.mtl
+mtllib cube1.mtl
 o Cube
 v 1.000000 1.000000 -1.000000
 v 1.000000 -1.000000 -1.000000

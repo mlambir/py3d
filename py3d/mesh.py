@@ -1,11 +1,12 @@
 import glm
+import pygame
 import pywavefront
 
 
 def iterate_vertices_t2f_n3f_v3f(vertices):
     for i in range(0, len(vertices), 8):
         yield (glm.vec3(vertices[i + 5], vertices[i + 6], vertices[i + 7]),
-               glm.vec3(-vertices[i + 2], -vertices[i + 3], -vertices[i + 4]),
+               glm.vec3(vertices[i + 2], vertices[i + 3], vertices[i + 4]),
                glm.vec2(vertices[i + 0], vertices[i + 1]))
 
 
@@ -16,14 +17,31 @@ def iterate_vertices_v3f(vertices):
                None)
 
 
+class Texture:
+    def __init__(self, filename):
+        self.surface = pygame.image.load(filename).convert()
+        self.width, self.height = self.size = self.surface.get_size()
+
+    def map(self, tu, tv):
+        u = abs(int(tu * self.width) % self.width)
+        v = abs(int(tv * self.height) % self.height)
+
+        color = self.surface.get_at([u, v])
+        return glm.vec4(*color).xyz/255
+
+
 class Mesh:
     def __init__(self) -> None:
         self.pos = glm.vec3()
         self.rot = glm.vec3()
         self.scale = glm.vec3(1)
         self.faces = []
+        self.texture = None
 
-    def load_obj(self, path):
+    def load_obj(self, path, texture=None):
+        if texture:
+            self.texture = Texture(texture)
+
         o = pywavefront.Wavefront(path, create_materials=True, collect_faces=True)
         for mat_name, mat in o.materials.items():
             if mat.vertex_format == 'V3F':
@@ -44,7 +62,7 @@ class Mesh:
 
     def generate_normals(self):
         for face in self.faces:
-            v0, v1, v2 = [v for v,n,u in face]
+            v0, v1, v2 = [v for v, n, u in face]
             normal = glm.normalize(glm.cross(v1 - v0, v2 - v0))
             for i, (v, n, u) in enumerate(face):
                 face[i] = (v, normal, u)
